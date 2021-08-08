@@ -17,4 +17,13 @@ public class TestController {
         return "hello security";
     }
 
+    @GetMapping("index")
+    public String index(){
+        return "hello index";
+    }
+
+    @GetMapping("update")
+    public String update(){
+        return "hello update";
+    }
 }

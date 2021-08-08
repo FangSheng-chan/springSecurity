@@ -13,16 +13,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service("UserDetailsService")
 public class MyUserDetailService implements UserDetailsService {
-    @Autowired
+
+    @Resource
     private UsersMapper usersMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //先通过username 查询数据库是否有这个用户
+        // 条件构造器
         QueryWrapper<Users> userQueryWrapper = new QueryWrapper<>();
         // where username = ?
         userQueryWrapper.eq("username", username);
@@ -33,7 +36,8 @@ public class MyUserDetailService implements UserDetailsService {
         }
         //权限设置
         List<GrantedAuthority> auths = AuthorityUtils.
-                commaSeparatedStringToAuthorityList("role");
+                commaSeparatedStringToAuthorityList("admins,ROLE_sale");
+        System.out.println("登录成功");
         //从查询数据库返回的user对象，得到用户名和密码
         return new User(user.getUsername(),
                 new BCryptPasswordEncoder().encode(user.getPassword()), auths);
